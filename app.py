@@ -7,12 +7,9 @@ from openai import OpenAI
 # Wczytaj zmienne środowiskowe
 load_dotenv()
 
-# Klucz API OpenAI
-openai_api_key = os.environ.get("OPENAI_API_KEY")
-llm_client = OpenAI(api_key=openai_api_key)
-
 # Wstaw do sesji jeśli brakuje klucza API
 if "openai_api_key" not in st.session_state:
+    openai_api_key = os.environ.get("OPENAI_API_KEY")
     if openai_api_key:
         st.session_state["openai_api_key"] = openai_api_key
     else:
@@ -20,6 +17,9 @@ if "openai_api_key" not in st.session_state:
         st.session_state["openai_api_key"] = st.text_input("Klucz API", type="password")
         if st.session_state["openai_api_key"]:
             st.experimental_rerun()
+
+# Użyj klucza z sesji do inicjalizacji klienta OpenAI
+llm_client = OpenAI(api_key=st.session_state["openai_api_key"])
 
 # Obrazek
 st.image("obrazek.png", use_container_width=True)
